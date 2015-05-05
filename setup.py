@@ -1,8 +1,6 @@
 from distutils.core import setup, Extension
 
 wbxml = Extension('wbxml',
-                  include_dirs=['/usr/include', '/usr/include/libwbxml-1.0/wbxml'],
-                  library_dirs=['/usr/lib'],
                   libraries=['wbxml2'],
                   sources=['src/wbxml.c'])
 
