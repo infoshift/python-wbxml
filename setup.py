@@ -8,7 +8,7 @@ wbxml = Extension('wbxml',
                   sources=['src/wbxml.c'])
 
 setup(name='wbxml',
-      version='0.1.0',
+      version='0.1.1',
       author='Jezeniel Zapanta',
       author_email='jezeniel@infoshiftinc.com',
       description='Python wrapper for libwbxml',
