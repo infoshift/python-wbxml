@@ -1,13 +1,25 @@
 from setuptools import setup, Extension
 
+with open('README.rst', 'r') as file:
+    long_description = file.read()
+
 wbxml = Extension('wbxml',
                   libraries=['wbxml2'],
                   sources=['src/wbxml.c'])
 
 setup(name='wbxml',
       version='0.1.0',
-      description='Python wrapper for libwbxml',
       author='Jezeniel Zapanta',
       author_email='jezeniel@infoshiftinc.com',
-      keywords=['wbxml', 'wap', 'xml'],
+      description='Python wrapper for libwbxml',
+      long_description=long_description,
+      license='MIT',
+      keywords=['wbxml', 'xml', 'mobile'],
+      url='https://github.com/infoshift/python-wbxml',
+      classifiers=[
+          'Intended Audience :: Developers',
+          'Topic :: Software Development :: Libraries',
+          'License :: OSI Approved :: MIT License',
+          'Programming Language :: Python :: 2.7'
+      ],
       ext_modules=[wbxml])
