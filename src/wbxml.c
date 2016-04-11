@@ -90,7 +90,7 @@ PyMODINIT_FUNC initwbxml(void) {
       "Python wrapper for libwbxml");
 
   if(module == NULL) {
-    return NULL;
+    return;
   }
 
   WBXMLParseError = PyErr_NewException("wbxml.WBXMLParseError", NULL, NULL);
