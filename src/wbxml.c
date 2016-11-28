@@ -1,7 +1,16 @@
-#include <python2.7/Python.h>
+#include <Python.h>
 #include <wbxml.h>
 
-static PyObject* WBXMLParseError;
+struct wbxml_state {
+    PyObject *WBXMLParseError;
+};
+
+#if PY_MAJOR_VERSION >= 3
+#define GETSTATE(m) ((struct wbxml_state*)PyModule_GetState(m))
+#else
+#define GETSTATE(m) (&_state)
+static struct wbxml_state _state;
+#endif
 
 static PyObject* xml_to_wbxml(PyObject* self, PyObject* args) {
   WBXMLError ret;
@@ -22,11 +31,12 @@ static PyObject* xml_to_wbxml(PyObject* self, PyObject* args) {
 
   ret = wbxml_conv_xml2wbxml_withlen(xml, xml_len, &wbxml, &wbxml_len, &params);
   if(ret != WBXML_OK) {
-    PyErr_SetString(WBXMLParseError, (const char*)wbxml_errors_string(ret));
+    struct wbxml_state *st = GETSTATE(self);
+    PyErr_SetString(st->WBXMLParseError, (const char*)wbxml_errors_string(ret));
     return NULL;
   }
 
-  PyObject *value = PyString_FromStringAndSize((const char*)wbxml, wbxml_len);
+  PyObject *value = PyBytes_FromStringAndSize((const char*)wbxml, wbxml_len);
 
   if(wbxml != NULL) {
     wbxml_free(wbxml);
@@ -35,7 +45,7 @@ static PyObject* xml_to_wbxml(PyObject* self, PyObject* args) {
   return value;
 }
 
-static char xml_to_wbxml_docs[] = 
+static char xml_to_wbxml_docs[] =
   "xml_to_wbxml(): converts xml to wbxml.\n";
 
 static PyObject* wbxml_to_xml(PyObject* self, PyObject* args) {
@@ -57,11 +67,12 @@ static PyObject* wbxml_to_xml(PyObject* self, PyObject* args) {
 
   ret = wbxml_conv_wbxml2xml_withlen(wbxml, wbxml_len, &xml, &xml_len, &params);
   if(ret != WBXML_OK) {
-    PyErr_SetString(WBXMLParseError, (const char*)wbxml_errors_string(ret));
+    struct wbxml_state *st = GETSTATE(self);
+    PyErr_SetString(st->WBXMLParseError, (const char*)wbxml_errors_string(ret));
     return NULL;
   }
 
-  PyObject *value = PyString_FromStringAndSize((const char*)xml, xml_len);
+  PyObject *value = PyUnicode_FromStringAndSize((const char*)xml, xml_len);
 
   if(xml != NULL) {
     wbxml_free(xml);
@@ -82,18 +93,67 @@ static PyMethodDef wbxml_funcs[] = {
   {NULL}
 };
 
-PyMODINIT_FUNC initwbxml(void) {
+static char wbxml_module_docs[] =
+  "Python wrapper for libwbxml";
+
+#if PY_MAJOR_VERSION >= 3
+
+static int wbxml_traverse(PyObject *m, visitproc visit, void *arg) {
+  Py_VISIT(GETSTATE(m)->WBXMLParseError);
+  return 0;
+}
+
+static int wbxml_clear(PyObject *m) {
+  Py_CLEAR(GETSTATE(m)->WBXMLParseError);
+  return 0;
+}
+
+static struct PyModuleDef moduledef = {
+        PyModuleDef_HEAD_INIT,
+        "wbxml",
+        wbxml_module_docs,
+        sizeof(struct wbxml_state),
+        wbxml_funcs,
+        NULL,
+        wbxml_traverse,
+        wbxml_clear,
+        NULL
+};
+
+#define INITERROR return NULL
+
+PyObject *
+PyInit_wbxml(void)
+
+#else
+#define INITERROR return
+
+PyMODINIT_FUNC initwbxml(void)
+#endif
+{
   PyObject* module;
 
-  module = Py_InitModule3("wbxml", 
-      wbxml_funcs, 
-      "Python wrapper for libwbxml");
+#if PY_MAJOR_VERSION >= 3
+  module = PyModule_Create(&moduledef);
+#else
+  module = Py_InitModule3("wbxml",
+      wbxml_funcs,
+      wbxml_module_docs);
+#endif
 
   if(module == NULL) {
-    return;
+    INITERROR;
   }
 
-  WBXMLParseError = PyErr_NewException("wbxml.WBXMLParseError", NULL, NULL);
-  Py_INCREF(WBXMLParseError);
-  PyModule_AddObject(module, "WBXMLParseError", WBXMLParseError);
+  struct wbxml_state *st = GETSTATE(module);
+
+  st->WBXMLParseError = PyErr_NewException("wbxml.WBXMLParseError", NULL, NULL);
+  if (st->WBXMLParseError == NULL) {
+    Py_DECREF(module);
+    INITERROR;
+  }
+
+#if PY_MAJOR_VERSION >= 3
+    return module;
+#endif
 }
