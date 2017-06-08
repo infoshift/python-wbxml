@@ -3,9 +3,10 @@ from setuptools import setup, Extension
 with open('README.rst', 'r') as file:
     long_description = file.read()
 
+import glob
 wbxml = Extension('wbxml',
-                  libraries=['wbxml2'],
-                  sources=['src/wbxml.c'])
+                  libraries=['expat'],
+                  sources=glob.glob('src/libwbxml/*.c') + ['src/wbxml.c'])
 
 setup(name='wbxml',
       version='0.1.1',
