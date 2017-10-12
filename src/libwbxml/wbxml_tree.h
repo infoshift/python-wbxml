@@ -2,27 +2,27 @@
  * libwbxml, the WBXML Library.
  * Copyright (C) 2002-2008 Aymerick Jehanne <aymerick@jehanne.org>
  * Copyright (C) 2011 Michael Bell <michael.bell@opensync.org>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * LGPL v2.1: http://www.gnu.org/copyleft/lesser.txt
- * 
+ *
  * Contact: aymerick@jehanne.org
  * Home: http://libwbxml.aymerick.com
  */
- 
+
 /**
  * @file wbxml_tree.h
  * @ingroup wbxml_tree
@@ -43,17 +43,17 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include <wbxml_config.h>
+#include "wbxml_config.h"
 
 /** @addtogroup wbxml_tree
- *  @{ 
+ *  @{
  */
 
 
 /****************************************************
  *	WBXML Tree Structures
  */
-  
+
 
 /**
  * @brief WBXML Tree Node Type
@@ -77,7 +77,7 @@ typedef struct WBXMLTreeNode_s
     WBXMLList           *attrs;     /**< Node Attributes (if type is 'WBXML_TREE_ELEMENT_NODE') */
     WBXMLBuffer         *content;   /**< Node Content (if  type is 'WBXML_TREE_TEXT_NODE')  */
     struct WBXMLTree_s  *tree;      /**< Node Tree (if  type is 'WBXML_TREE_TREE_NODE') */
-    
+
     struct WBXMLTreeNode_s  *parent;    /**< Parent Node */
     struct WBXMLTreeNode_s  *children;  /**< Children Node */
     struct WBXMLTreeNode_s  *next;      /**< Next sibling Node */
@@ -87,7 +87,7 @@ typedef struct WBXMLTreeNode_s
 
 /**
  * @brief WBXML Tree structure
- * 
+ *
  * This structure is created when parsing a WBXML or XML document, thanks to
  * the functions wbxml_tree_from_wbxml() and wbxml_tree_from_xml().
  *
@@ -99,7 +99,7 @@ typedef struct WBXMLTreeNode_s
  * @note All the strings inside the WBXML Tree are encoded into UTF-8
  */
 typedef struct WBXMLTree_s
-{    
+{
     const WBXMLLangEntry *lang;         /**< Language Table */
     WBXMLTreeNode        *root;         /**< Root Element */
     WBXMLCharsetMIBEnum   orig_charset; /**< Charset encoding of original document */
@@ -107,7 +107,7 @@ typedef struct WBXMLTree_s
 } WBXMLTree;
 
 
-/** 
+/**
  * WBXML Tree Clb Context Structure
  * @note Used by WBXML Tree Callbacks ('wbxml_tree_clb_wbxml.h' and 'wbxml_tree_clb_xml.h')
  */
@@ -123,7 +123,7 @@ typedef struct WBXMLTreeClbCtx_s {
 #if defined( HAVE_EXPAT )
     XML_Parser     xml_parser;    /**< Pointer to Expat XML Parser */
     WB_BOOL        expat_utf16;   /**< Is Expat compiled to output UTF-16 ? */
-#endif /* HAVE_EXPAT */ 
+#endif /* HAVE_EXPAT */
 } WBXMLTreeClbCtx;
 
 
@@ -152,7 +152,7 @@ typedef enum WBXMLSyncMLDataType_e {
  * @param wbxml     [in]  The WBXML document to parse
  * @param wbxml_len [in]  The WBXML document length
  * @param lang      [in]  Can be used to force parsing of a given Language (set it to WBXML_LANG_UNKNOWN if you don't want to force anything)
- * @param tree      [out] The resulting WBXML Tree 
+ * @param tree      [out] The resulting WBXML Tree
  * @result Return WBXML_OK if no error, an error code otherwise
  */
 WBXML_DECLARE(WBXMLError) wbxml_tree_from_wbxml(WB_UTINY *wbxml,
@@ -178,7 +178,7 @@ WBXML_DECLARE(WBXMLError) wbxml_tree_to_wbxml(WBXMLTree *tree,
  * @brief Parse an XML document, using internal callbacks (in wbxml_tree_clb_xml.c), and construct a WBXML Tree
  * @param xml     [in]  The XML document to parse
  * @param xml_len [in]  Length of the XML document
- * @param tree    [out] The resulting WBXML Tree 
+ * @param tree    [out] The resulting WBXML Tree
  * @result Return WBXML_OK if no error, an error code otherwise
  * @note Needs 'HAVE_EXPAT' compile flag
  */
@@ -205,7 +205,7 @@ WBXML_DECLARE(WBXMLError) wbxml_tree_to_xml(WBXMLTree *tree,
 /**
  * @brief Parse a LibXML document, and construct the corresponding WBXML Tree
  * @param libxml_doc [in]  The LibXML document to parse
- * @param tree       [out] The resulting WBXML Tree 
+ * @param tree       [out] The resulting WBXML Tree
  * @result Return WBXML_OK if no error, an error code otherwise
  * @note Needs 'HAVE_LIBXML' compile flag
  */
