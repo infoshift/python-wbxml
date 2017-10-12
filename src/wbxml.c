@@ -173,6 +173,9 @@ static PyObject* wbxml_to_xml(PyObject* self, PyObject* args, PyObject* kwargs) 
 
     // exception
     if (ret != WBXML_OK) {
+        if (xml != NULL) {
+            wbxml_free(xml);
+        }
         if (error_context[0] == '\0') {
             snprintf(error_string, sizeof(error_string), "%s", (const char*)wbxml_errors_string(ret));
         } else {
@@ -184,6 +187,9 @@ static PyObject* wbxml_to_xml(PyObject* self, PyObject* args, PyObject* kwargs) 
 
     // success
     PyObject *value = PyString_FromStringAndSize((const char*)xml, xml_len);
+    if (xml != NULL) {
+        wbxml_free(xml);
+    }
     return value;
 }
 
