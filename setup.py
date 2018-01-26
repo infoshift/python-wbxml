@@ -9,13 +9,13 @@ wbxml = Extension('wbxml',
                   sources=glob.glob('src/libwbxml/*.c') + ['src/wbxml.c'])
 
 setup(name='wbxml',
-      version='0.1.1',
-      author='Jezeniel Zapanta',
-      author_email='jezeniel@infoshiftinc.com',
+      version='0.1.2',
+      author='Mathieu Rodic',
+      author_email='mathieu@iko-system.com',
       description='Python wrapper for libwbxml',
       long_description=long_description,
       license='MIT',
-      keywords=['wbxml', 'xml', 'mobile'],
+      keywords=['wbxml', 'xml', 'mobile', 'exchange', 'EAS'],
       url='https://github.com/infoshift/python-wbxml',
       classifiers=[
           'Intended Audience :: Developers',
